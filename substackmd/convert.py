@@ -23,15 +23,11 @@ class ProcessHTML():
     def p(self, tag):
         content = self.process_children(tag)
         return f"{content} \n\n"
-    def span(self, tag):
-        content = self.process_children(tag)
-        return content
     def strong(self, tag):
         content = self.process_children(tag)
         return f"**{content.strip()}**"
     def em(self, tag):
         content = self.process_children(tag)
-        # print(tag.contents)
         return f"_{content.strip()}_"
     def s(self, tag):
         content = self.process_children(tag)
@@ -40,29 +36,70 @@ class ProcessHTML():
         content = self.process_children(tag)
         link = tag['href']
         return f"[{content}]({link})"
-    def ul(self, tag):
+    def blockquote(self, tag):
         content = self.process_children(tag)
-        return f"{content}"
-    def li(self, tag):
-        content = self.process_children(tag)
-        return f"- {content} \n"
+        result = ""
+        for i in content.split("\n"):
+            result += "> {i} \n"
+        return content
     def hr(self, tag):
         return "\n--- \n"
+    def br(self, tag):
+        return "\n"
     def div(self, tag):
         for class_name in tag.get('class', []):
             if class_name in DIV_CLASSES_TO_IGNORE:
                 return ""
         content = self.process_children(tag)
         return f'{content}'
-    def figure(self, tag):
-        return ""
+    def h1(self, tag):
+        content = self.process_children(tag)
+        return f"# {content} \n"
+    def h2(self, tag):
+        content = self.process_children(tag)
+        return f"## {content} \n"
+    def h3(self, tag):
+        content = self.process_children(tag)
+        return f"### {content} \n"
+    def h4(self, tag):
+        content = self.process_children(tag)
+        return f"#### {content} \n"
+    def h5(self, tag):
+        content = self.process_children(tag)
+        return f"##### {content} \n"
+    def h6(self, tag):
+        content = self.process_children(tag)
+        return f"###### {content} \n"
+    def ul(self, tag):
+        content = ""
+        for child_tag in tag.contents:
+            if child_tag.name == "li":
+                content += f"- {self.li(child_tag)} \n"
+        return content
+    def ol(self, tag):
+        content = ""
+        index = 1
+        for child_tag in tag.contents:
+            if child_tag.name == "li":
+                content += f"{index}. {self.li(child_tag)} \n"
+                index += 1
+        return content
+     
+    # ignore tags
     def form(self, tag):
         return ""
     def svg(self, tag):
         return ""
-    def h4(self, tag):
+    def figure(self, tag):
+        return ""
+    
+    # only process children
+    def span(self, tag):
         content = self.process_children(tag)
-        return f"#### {content} \n"
+        return content
+    def li(self, tag):
+        content = self.process_children(tag)
+        return content 
 
 
 def process_substack_html(html_soup):
