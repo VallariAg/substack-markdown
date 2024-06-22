@@ -1,7 +1,9 @@
 # Substack Markdown 
  
 Convert and save substack posts to markdown files. 
-Since substack does not support markdown backups, this tool is created to markdown backup using a blog post's link.
+Since substack does not support markdown backups, this tool is created to save the post as markdown file locally using a blog post's link.
+
+Images would also be downloaded and stored in a new `/images` directory in the current dir.
 
 ### Setup
 
